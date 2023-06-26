@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,6 +52,19 @@ public class GlobalExceptionHandler {
         msg.setDescription(request.getRequestURL().toString());
 
         // return the error page with injected error message
+        ModelAndView mav = new ModelAndView("error.html");
+        mav.addObject("errorMessage", msg);
+        return mav;
+    }
+
+    @ExceptionHandler(HttpServerErrorException.class)
+    public ModelAndView handleHttpServerErrorException(HttpServerErrorException ex, HttpServletRequest request) {
+        ErrorMessage msg = new ErrorMessage();
+        msg.setStatusCode(ex.getStatusCode().value());
+        msg.setTimeStamp(new Date());
+        msg.setMessage("Internal server error");
+        msg.setDescription(request.getRequestURL().toString());
+
         ModelAndView mav = new ModelAndView("error.html");
         mav.addObject("errorMessage", msg);
         return mav;
