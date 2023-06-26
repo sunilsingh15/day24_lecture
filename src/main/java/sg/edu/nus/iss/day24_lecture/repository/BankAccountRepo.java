@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import sg.edu.nus.iss.day24_lecture.model.BankAccount;
 
@@ -16,7 +17,7 @@ public class BankAccountRepo {
     private final String GET_ACCOUNT_SQL = "select * from bank_account where id = ?";
     private final String WITHDRAW_SQL = "update bank_account set balance = balance - ? where id = ?";
     private final String DEPOSIT_SQL = "update bank_account set balance = balance + ? where id = ?";
-    private final String CREATE_ACCOUNT_SQL = "insert into bank_account (full_name, is_blocked, account_type, balance) values (?, ?, ?, ?, ?)";
+    private final String CREATE_ACCOUNT_SQL = "insert into bank_account (full_name, is_blocked, is_active, account_type, balance) values (?, ?, ?, ?, ?)";
     // private final String CREATE_ACCOUNT2_SQL = "insert into bank_account values (?, ?, ?, ?, ?)";
 
     public BankAccount getAccountByID(int id) {
@@ -45,6 +46,13 @@ public class BankAccountRepo {
         } else {
             return false;
         }
+    }
+
+    //transactional - must be encompassed in a single unit of work
+    @Transactional
+    public Boolean transferMoney(Integer withdrawalAccountID, Integer depositAccountID, Float transferAmount) {
+
+        return false;
     }
     
 }
