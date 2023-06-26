@@ -38,5 +38,13 @@ public class BankAccountRepo {
             return false;
         }
     }
+
+    public Boolean createAccount(BankAccount bankAccount) {
+        if ((template.update(CREATE_ACCOUNT_SQL, bankAccount.getFullName(), bankAccount.getIsActive(), bankAccount.getIsBlocked(), bankAccount.getAccountType(), bankAccount.getBalance())) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
 }
