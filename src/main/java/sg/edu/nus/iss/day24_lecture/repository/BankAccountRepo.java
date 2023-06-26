@@ -30,5 +30,13 @@ public class BankAccountRepo {
             return false;
         }
     }
+
+    public Boolean deposit(int accountID, Float depositAmount) {
+        if ((template.update(DEPOSIT_SQL, depositAmount, accountID)) > 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
 }
