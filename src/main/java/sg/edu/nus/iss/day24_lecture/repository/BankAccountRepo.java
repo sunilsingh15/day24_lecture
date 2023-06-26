@@ -24,7 +24,7 @@ public class BankAccountRepo {
     }
 
     public Boolean withdraw(int accountID, Float withdrawAmount) {
-        if ((template.update(WITHDRAW_SQL, withdrawAmount, accountID)) > 1) {
+        if ((template.update(WITHDRAW_SQL, withdrawAmount, accountID)) == 1) {
             return true;
         } else {
             return false;
@@ -32,7 +32,7 @@ public class BankAccountRepo {
     }
 
     public Boolean deposit(int accountID, Float depositAmount) {
-        if ((template.update(DEPOSIT_SQL, depositAmount, accountID)) > 1) {
+        if ((template.update(DEPOSIT_SQL, depositAmount, accountID)) == 1) {
             return true;
         } else {
             return false;
@@ -40,7 +40,7 @@ public class BankAccountRepo {
     }
 
     public Boolean createAccount(BankAccount bankAccount) {
-        if ((template.update(CREATE_ACCOUNT_SQL, bankAccount.getFullName(), bankAccount.getIsActive(), bankAccount.getIsBlocked(), bankAccount.getAccountType(), bankAccount.getBalance())) > 0) {
+        if ((template.update(CREATE_ACCOUNT_SQL, bankAccount.getFullName(), bankAccount.getIsActive(), bankAccount.getIsBlocked(), bankAccount.getAccountType(), bankAccount.getBalance())) == 1) {
             return true;
         } else {
             return false;
