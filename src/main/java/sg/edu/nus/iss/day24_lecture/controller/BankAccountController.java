@@ -31,7 +31,7 @@ public class BankAccountController {
         }
     }
 
-    @GetMapping("/${account-id}")
+    @GetMapping("/{account-id}")
     public ResponseEntity<BankAccount> getAccountByID(@PathVariable("account-id") Integer id) {
         BankAccount account = service.retrieveAccountByID(id);
 
