@@ -1,11 +1,13 @@
 package sg.edu.nus.iss.day24_lecture.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import sg.edu.nus.iss.day24_lecture.exception.BankAccountNotFoundException;
 import sg.edu.nus.iss.day24_lecture.model.BankAccount;
 
 @Repository
@@ -18,10 +20,20 @@ public class BankAccountRepo {
     private final String WITHDRAW_SQL = "update bank_account set balance = balance - ? where id = ?";
     private final String DEPOSIT_SQL = "update bank_account set balance = balance + ? where id = ?";
     private final String CREATE_ACCOUNT_SQL = "insert into bank_account (full_name, is_blocked, is_active, account_type, balance) values (?, ?, ?, ?, ?)";
-    // private final String CREATE_ACCOUNT2_SQL = "insert into bank_account values (?, ?, ?, ?, ?)";
+    // private final String CREATE_ACCOUNT2_SQL = "insert into bank_account values
+    // (?, ?, ?, ?, ?)";
 
     public BankAccount getAccountByID(int id) {
-        return template.queryForObject(GET_ACCOUNT_SQL, BeanPropertyRowMapper.newInstance(BankAccount.class), id);
+        List<BankAccount> bankAccounts = template.query(GET_ACCOUNT_SQL,
+                BeanPropertyRowMapper.newInstance(BankAccount.class), id);
+
+        if (bankAccounts.isEmpty()) {
+            throw new BankAccountNotFoundException("Account does not exist.");
+        }
+
+        BankAccount bankAccount = bankAccounts.get(0);
+
+        return bankAccount;
     }
 
     public Boolean withdraw(int accountID, Float withdrawAmount) {
@@ -41,18 +53,12 @@ public class BankAccountRepo {
     }
 
     public Boolean createAccount(BankAccount bankAccount) {
-        if ((template.update(CREATE_ACCOUNT_SQL, bankAccount.getFullName(), bankAccount.getIsActive(), bankAccount.getIsBlocked(), bankAccount.getAccountType(), bankAccount.getBalance())) == 1) {
+        if ((template.update(CREATE_ACCOUNT_SQL, bankAccount.getFullName(), bankAccount.getIsBlocked(),
+                bankAccount.getIsActive(), bankAccount.getAccountType(), bankAccount.getBalance())) == 1) {
             return true;
         } else {
             return false;
         }
     }
 
-    //transactional - must be encompassed in a single unit of work
-    @Transactional
-    public Boolean transferMoney(Integer withdrawalAccountID, Integer depositAccountID, Float transferAmount) {
-
-        return false;
-    }
-    
 }

@@ -39,4 +39,12 @@ public class BankAccountController {
         return new ResponseEntity<BankAccount>(account, HttpStatus.OK);
 
     }
+
+    @PostMapping("/transfer/{transferer-id}/receive/{receiver-id}/amount/{amount}")
+    public ResponseEntity<Boolean> transferMoney(@PathVariable("transferer-id") int transfererID, @PathVariable("receiver-id") int receiverID, @PathVariable("amount") float amount) {
+        service.transferMoney(transfererID, receiverID, amount);
+
+        return new ResponseEntity<Boolean>((service.transferMoney(transfererID, receiverID, amount)), HttpStatus.OK);
+    }
+    
 }
